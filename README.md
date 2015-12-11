@@ -73,6 +73,11 @@ RABBITMQ_ROCKS="correct"
 `rabbitmq_server_key`|String|Path of the SSL key file.|`files/rabbitmq_server_key.pem`
 `rabbitmq_server_cert`|String|Path of the SSL certificate file.|`files/rabbitmq_server_cert.pem`
 `rabbitmq_ssl`|Boolean|Define if we need to use SSL|`true`
+`rabbitmq_ssl_from_s3`|Boolean|Define if we need to pull SSL certs from an S3 bucket|`false`
+`rabbitmq_ssl_s3_bucket`|String|Name of the S3 bucket that contains SSL certs|`""`
+`rabbitmq_ssl_s3_path`|String|Path to SSL certs in S3 bucket|`""`
+
+
 
 ### Default configuration file
 
