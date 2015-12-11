@@ -73,6 +73,11 @@ RABBITMQ_ROCKS="correct"
 `rabbitmq_server_key`|String|Path of the SSL key file.|`files/rabbitmq_server_key.pem`
 `rabbitmq_server_cert`|String|Path of the SSL certificate file.|`files/rabbitmq_server_cert.pem`
 `rabbitmq_ssl`|Boolean|Define if we need to use SSL|`true`
+`rabbitmq_ssl_from_s3`|Boolean|Define if we need to pull SSL certs from an S3 bucket|`false`
+`rabbitmq_ssl_s3_bucket`|String|Name of the S3 bucket that contains SSL certs|`""`
+`rabbitmq_ssl_s3_path`|String|Path to SSL certs in S3 bucket|`""`
+
+
 
 ### Default configuration file
 
@@ -175,6 +180,16 @@ And then configure the role:
     rabbitmq_cacert: files/cacert.crt
     rabbitmq_server_key: files/myserver_key.key
     rabbitmq_server_cert: files/myserver_cert.crt
+```
+
+As an alternative, you can download SSL certificates from an S3 bucket. This feature requires the certificate files listed above to be stored in an S3 bucket, [boto](http://docs.pythonboto.org/en/latest/) to be installed on the target system, and the target system to have access to the S3 bucket. One way to achieve S3 access from an EC2 instance without placing any credentials is via [EC2 IAM role](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html) configuration.
+
+With all those in place configure the role to pull from the root of the bucket:
+
+```yaml
+    rabbitmq_ssl_from_s3: true
+    rabbitmq_ssl_s3_bucket: your-s3-bucket-name
+    rabbitmq_ssl_s3_path: ""
 ```
 
 ## Testing
