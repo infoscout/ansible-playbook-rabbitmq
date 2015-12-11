@@ -182,6 +182,16 @@ And then configure the role:
     rabbitmq_server_cert: files/myserver_cert.crt
 ```
 
+As an alternative, you can download SSL certificates from an S3 bucket. This feature requires the certificate files listed above to be stored in an S3 bucket, [boto](http://docs.pythonboto.org/en/latest/) to be installed on the target system, and the target system to have access to the S3 bucket. One way to achieve S3 access from an EC2 instance without placing any credentials is via [EC2 IAM role](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html) configuration.
+
+With all those in place configure the role to pull from the root of the bucket:
+
+```yaml
+    rabbitmq_ssl_from_s3: true
+    rabbitmq_ssl_s3_bucket: your-s3-bucket-name
+    rabbitmq_ssl_s3_path: ""
+```
+
 ## Testing
 
 There is some tests that try to provision a VM using Vagrant. Just launch them
