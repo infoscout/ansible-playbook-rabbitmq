@@ -1,17 +1,17 @@
 [
   {rabbit, [
 {#
-   If there is a listenning address defined for the insecure TCP listenner,
+   If there is a listening address defined for the insecure TCP listener,
    declare it.
 #}
 {% if rabbitmq_conf_tcp_listeners_address != '' %}
     {tcp_listeners, [{"{{ rabbitmq_conf_tcp_listeners_address }}", {{ rabbitmq_conf_tcp_listeners_port }}}]}{% if rabbitmq_ssl %},
 {% endif %}
 {#
-   Otherwise, shut down the listenner.
+   Otherwise,
 #}
 {% else %}
-    {tcp_listeners, []}{% if rabbitmq_ssl %},
+    {tcp_listeners, [{{ rabbitmq_conf_tcp_listeners_port }}]}{% if rabbitmq_ssl %},
 {% endif %}
 {% endif %}
 {% if rabbitmq_ssl %}
@@ -24,5 +24,20 @@
       {fail_if_no_peer_cert,{{rabbitmq_conf_ssl_options_fail_if_no_peer_cert}}}
       ]}
 {% endif %}
+
+{% if rabbitmq_vm_memory_high_watermark %}
+, {vm_memory_high_watermark, {{rabbitmq_vm_memory_high_watermark}} }
+{%- endif %}
+
+{% if rabbitmq_cluster %}
+, {cluster_nodes,
+    {[
+  {%- for host in ansible_play_hosts %}
+    'rabbit@{{ hostvars[host]['inventory_hostname'] }}'{% if not loop.last %},{% endif %}
+  {%- endfor %}
+    ], disc }
+  }
+{%- endif %}
+
   ]}
 ].

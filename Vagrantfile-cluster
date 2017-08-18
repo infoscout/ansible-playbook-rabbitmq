@@ -1,0 +1,41 @@
+BOX_NAME = ENV['VAGRANT_BOX_NAME'] || 'ubuntu/trusty64'
+BOXES = [
+  { name: "rabbit1.local", ip: '10.10.0.101'},
+  { name: 'rabbit2.local', ip: '10.10.0.102'},
+]
+
+Vagrant.configure('2') do |config|
+  config.ssh.username = "vagrant"
+  config.ssh.password = "vagrant"
+
+  config.vm.box = BOX_NAME
+
+  config.vm.provider :virtualbox do |vb|
+      vb.customize ['modifyvm', :id, '--cpus', '1']
+      vb.customize ['modifyvm', :id, '--memory', '1024']
+      vb.customize ['modifyvm', :id, '--natdnshostresolver1', 'on', "--usb", "on", "--usbehci", "on"]
+    end
+
+
+
+  BOXES.each do |opts|
+    config.vm.define opts[:name] do |config|
+      config.vm.host_name = opts[:name].to_s
+      config.vm.network :private_network, ip: opts[:ip], netmask: '255.255.255.0'
+
+      config.vm.provision "shell", inline: <<-SHELL
+         apt-get install -y avahi-daemon libnss-mdns
+       SHELL
+
+      if opts == BOXES.last()
+        config.vm.provision 'ansible' do |ansible|
+          ansible.playbook = 'vagrant/site.yml'
+          ansible.sudo = true
+          ansible.limit = 'all'
+          ansible.host_key_checking = false
+        end
+      end
+    end
+  end
+
+end

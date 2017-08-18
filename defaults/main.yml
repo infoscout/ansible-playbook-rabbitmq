@@ -14,6 +14,9 @@ rabbitmq_new_only: 'no'
 rabbitmq_vhost_definitions: []
 rabbitmq_users_definitions: []
 
+# Avoid setting up clustering
+rabbitmq_cluster: false
+
 # Avoid setting up federation
 rabbitmq_federation: false
 
@@ -41,6 +44,9 @@ rabbitmq_conf_ssl_options_cacertfile          : "/etc/rabbitmq/ssl/{{ rabbitmq_c
 rabbitmq_conf_ssl_options_certfile            : "/etc/rabbitmq/ssl/{{ rabbitmq_server_cert | basename }}"
 rabbitmq_conf_ssl_options_keyfile             : "/etc/rabbitmq/ssl/{{ rabbitmq_server_key | basename }}"
 rabbitmq_conf_ssl_options_fail_if_no_peer_cert: "true"
+
+# Resource Limits and Flow control
+rabbitmq_vm_memory_high_watermark: null
 
 rabbitmq_env: false
 

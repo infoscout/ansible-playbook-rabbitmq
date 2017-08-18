@@ -1,0 +1,27 @@
+---
+- hosts: all
+  become: yes
+  become_method: sudo
+  roles:
+    - role: rabbitmq
+      rabbitmq_federation: false
+      rabbitmq_vhost_definitions:
+        - name: vhost1
+
+      rabbitmq_users_definitions:
+        - vhost:    vhost1
+          user:     app-user1
+          password: placeholder
+
+      rabbitmq_policy_configuration:
+        - name:    policy
+          pattern: '.'
+          vhost:   vhost1
+
+      rabbitmq_cluster: true
+      rabbitmq_ssl: false
+      rabbitmq_vm_memory_high_watermark: 0.7
+
+  tasks:
+    # Flush outstanding handlers before tests.
+    - meta:    flush_handlers
