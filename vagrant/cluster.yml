@@ -1,9 +1,11 @@
 ---
 - hosts: all
+  serial: 1
   become: yes
   become_method: sudo
   roles:
     - role: rabbitmq
+      rabbitmq_cluster_name: mycluster
       rabbitmq_federation: false
       rabbitmq_vhost_definitions:
         - name: vhost1
@@ -21,7 +23,12 @@
       rabbitmq_cluster: true
       rabbitmq_ssl: false
       rabbitmq_vm_memory_high_watermark: 0.7
+      # AWS EC2  take note:
+      rabbitmq_conf_env:
+        RABBITMQ_USE_LONGNAME: 'true'
 
   tasks:
+    - name: set cluster name
+      command: rabbitmqctl set_cluster_name {{rabbitmq_cluster_name}}
     # Flush outstanding handlers before tests.
     - meta:    flush_handlers
