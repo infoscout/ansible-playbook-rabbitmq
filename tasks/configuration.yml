@@ -40,6 +40,10 @@
       dest: "{{ rabbitmq_conf_ssl_options_certfile }}"
   when: rabbitmq_ssl and not rabbitmq_ssl_from_s3
 
+- name: set erlang cookie
+  template: src=erlang.cookie.j2 dest=/var/lib/rabbitmq/.erlang.cookie owner=rabbitmq group=rabbitmq mode=0400 backup=yes
+  when: rabbitmq_cluster
+
 - name: generate the configuration of rabbitmq
   template:
     src=rabbitmq.config.j2

@@ -15,6 +15,11 @@
 
 - name: install rabbitmq-server
   apt: name=rabbitmq-server update_cache=yes
+  register: rmq_install
+
+- name: stop rabbitmq-server if just installed the package to ensure clustering
+  service: name=rabbitmq-server state=stopped
+  when: rmq_install.changed and rabbitmq_cluster
 
 - name: enable rabbitmq-server to survive reboot
   service: name=rabbitmq-server enabled=yes

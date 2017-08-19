@@ -16,6 +16,8 @@ rabbitmq_users_definitions: []
 
 # Avoid setting up clustering
 rabbitmq_cluster: false
+erlang_cookie: default_erlang_cookie
+rabbitmq_cluster_name: default_cluster
 
 # Avoid setting up federation
 rabbitmq_federation: false
